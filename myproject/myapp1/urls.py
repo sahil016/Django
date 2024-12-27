@@ -10,13 +10,12 @@ Function views
 Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
+Including another URLconf   
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
 from myapp1 import views
-
 urlpatterns = [
     path('home/', views.home, name='home'),
     path('index/', views.index, name='index'),  # This will map the home view to the root URL
