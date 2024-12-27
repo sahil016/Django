@@ -1,5 +1,6 @@
 
 <!DOCTYPE html>
+{% extends "base.html" %}
 
 {% load static %}
 <html lang="en">
@@ -34,7 +35,8 @@
 
   </head>
   <body class="goto-here">
-		<div class="py-1 bg-black">
+	{% block content %}
+		{% comment %} <div class="py-1 bg-black">
     	<div class="container">
     		<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
 	    		<div class="col-lg-12 d-block">
@@ -83,7 +85,7 @@
 	      </div>
 	    </div>
 	  </nav>
-    <!-- END nav -->
+    <!-- END nav --> {% endcomment %}
 
     <section id="home-section" class="hero">
 		  <div class="home-slider js-fullheight owl-carousel">
@@ -628,7 +630,7 @@
         </div>
       </div>
     </section>
-    <footer class="ftco-footer bg-light ftco-section">
+    {% comment %} <footer class="ftco-footer bg-light ftco-section">
       <div class="container">
       	<div class="row">
       		<div class="mouse">
@@ -725,6 +727,9 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="{% static 'js/google-map.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
+   {% endcomment %}
   
-  </body>
+{% endblock %}
+
+ </body>
 </html>
