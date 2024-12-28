@@ -20,6 +20,8 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('index/', views.index, name='index'),  # This will map the home view to the root URL
     path('blog-single',views.blog, name='blog-single'),
-    path('about', views.about, name='about')
+    path('about', views.about, name='about'),
+    path('about', views.contact, name='about'),
+
 ]
 
