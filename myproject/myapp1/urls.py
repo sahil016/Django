@@ -21,6 +21,8 @@ urlpatterns = [
     path('index/', views.index, name='index'),  # This will map the home view to the root URL
     path('about', views.about, name='about'),
     path('contact', views.contact, name='about'),
-    path('signup', views.signup, name='signup')
+    path('signup', views.signup, name='signup'),
+    path('login' ,views.login, name='login'),
+    path('logout' ,views.logout, name='logout')
 ]
 

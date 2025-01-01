@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User
+from .models import *
 from django.contrib import messages
 # Create your views here.
 def home(request):
@@ -15,27 +15,11 @@ def about(request):
  
 def contact(request):
     return render(request, 'contact.html')
-""" 
-def signup(request):
-    if request.methos=="POST":
-        
-        username=request.POST['username']
-        email=request.POST['email']
-        password=request.POST['password']
-        confirm_password=request.POST['cpassword']
-        if password==confirm_password:
-            user=user.objects.create_user(username,email,password)
-            user.save()
-            return render(request,'login.html')
-        else:
-            return render(request,'signup.html',{'error':'password and confirm password do not match'})
-    
-    return render(request, 'signup.html') """
-    
+
 def signup(request):
     if request.method=="POST":
         try:
-            user = User.objacts.get(email=request.POST['email'])
+            user = User.objects.get(email=request.POST['email'])
             msg = "Email already exists!!"
             return render(request,'signup.html',{'msg':msg})
         except:
@@ -49,9 +33,12 @@ def signup(request):
                 )
 
                 msg = "Signup Succesfuly"
+                return render(request,'login.html',{'msg':msg})
             else:
-                return render(request,'signup.html')
-            
+                msg = "Password & confirm password does not match"
+                return render(request,'signup.html',{'msg':msg})
+    else:  # Handle GET request
+        return render(request, 'signup.html')  # Render the signup page with no messages
 
 def login(request):
     if request.method=="POST":
@@ -63,7 +50,16 @@ def login(request):
 
                 return redirect('index')
             else:
-                msg = "Invalid Password!!
-                return redirect(request,'login.html',('msg':msg))
+                msg = "Invalid Password!!"
+                return render(request,'login.html',{'msg':msg})
             
         except:
+            msg = "Invalid Email!!"
+            return render(request,'login.html',{'msg':msg})
+    else:
+        return render(request,'login.html')
+
+
+def logout(request):
+    del request.session['email']
+    return redirect('login.html')
