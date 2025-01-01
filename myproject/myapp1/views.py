@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 # Create your views here.
@@ -12,7 +12,7 @@ def index(request):
 def about(request):
     return render(request, 'about.html')
 
-
+ 
 def contact(request):
     return render(request, 'contact.html')
 """ 
@@ -33,23 +33,37 @@ def signup(request):
     return render(request, 'signup.html') """
     
 def signup(request):
-    if request.method == "POST":
-        name = request.POST['name']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['cpassword']
+    if request.method=="POST":
+        try:
+            user = User.objacts.get(email=request.POST['email'])
+            msg = "Email already exists!!"
+            return render(request,'signup.html',{'msg':msg})
+        except:
+            if request.POST['password']==request.POST['cpassword']:
+                User.objects.create(
+                    
+                    name = request.POST['name'],
+                    email = request.POST['email'],
+                    mobile = request.POST['mobile'],
+                    password = request.POST['password']
+                )
 
-        if password == confirm_password:
-            if User.objects.filter(name=name).exists():
-                return render(request, 'signup.html', {'error': 'Username already exists'})
-            if User.objects.filter(email=email).exists():
-                return render(request, 'signup.html', {'error': 'Email already exists'})
+                msg = "Signup Succesfuly"
+            else:
+                return render(request,'signup.html')
+            
 
-            user = User.objects.create_user(name=name, email=email, password=password)
-            user.save()
-            messages.success(request, 'Account created successfully! You can now log in.')
-            ##  # Redirect to the login page after successful signup
-        else:
-            return render(request, 'signup.html', {'error': 'Passwords do not match'})
+def login(request):
+    if request.method=="POST":
+        try:
+            user = User.objects.get(email=request.POST['email'])
 
-    return render(request, 'signup.html')
+            if user.password == request.POST['password']:
+                request.session['email']=user.email
+
+                return redirect('index')
+            else:
+                msg = "Invalid Password!!
+                return redirect(request,'login.html',('msg':msg))
+            
+        except:
