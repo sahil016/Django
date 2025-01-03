@@ -63,3 +63,20 @@ def login(request):
 def logout(request):
     del request.session['email']
     return redirect('login.html')
+
+
+
+def cpass(request):
+    if request.method=="POST":
+        try:
+            user = User.objects.get(email=request.session['email'])
+
+            if user.password==request.POST['opassword']:
+                user.password = request.POST['cpassword']
+                user.save()
+                return redirect('logout')
+            
+        except:
+            pass
+    else:
+        return redirect('logout')
