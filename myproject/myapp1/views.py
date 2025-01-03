@@ -9,6 +9,31 @@ def index(request):
     return render(request,'index.html')
 
 
+def cpass(request):
+    if request.method=="POST":
+        try:
+            user = User.objects.get(email=request.session['email'])
+
+            if user.password==request.POST['opassword']:
+                if request.POST['npassword']==request.POST['cnpassword']:
+                    user.password=request.POST['npassword']
+                    user.save()
+                    return redirect('logout')
+                else:
+                    msg = "Password & confirm password does not match"
+                    return render(request, 'cpass.html',{'msg':msg})
+            else:
+                msg = "Old Password does not match"
+                return render(request, 'cpass.html',{'msg':msg})
+                    
+        except Exception as e:
+            msg = f"An error occurred: {e}"
+            return render(request, 'cpass.html', {'msg': msg})
+            
+    else:
+        return render(request,'cpass.html')
+
+
 def about(request):
     return render(request, 'about.html')
 
@@ -62,21 +87,19 @@ def login(request):
 
 def logout(request):
     del request.session['email']
-    return redirect('login.html')
+    return redirect('login')
 
 
 
-def cpass(request):
-    if request.method=="POST":
+def fpass(request):
+    if request.method == "POST":
         try:
-            user = User.objects.get(email=request.session['email'])
-
-            if user.password==request.POST['opassword']:
-                user.password = request.POST['cpassword']
-                user.save()
-                return redirect('logout')
-            
+            user = User.objects.get(email=request.POST['email'])
+            msg = "Password sent to your email"
+            return render(request,'fpass.html',{'msg':msg})
         except:
-            pass
+            msg = "Invalid Email!!"
+            return render(request,'fpass.html',{'msg':msg})
     else:
-        return redirect('logout')
+        msg = "Email not found!!"
+        return render(request,'fpass.html',{'msg':msg})
