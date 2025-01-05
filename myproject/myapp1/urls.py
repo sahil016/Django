@@ -17,13 +17,14 @@ Including another URLconf
 from django.urls import path
 from myapp1 import views
 urlpatterns = [
-    path('home/', views.home, name='home'),
-    path('index/', views.index, name='index'),  # This will map the home view to the root URL
+    path('home', views.home, name='home'),
+    path('index', views.index, name='index'),  # This will map the home view to the root URL
     path('about', views.about, name='about'),
     path('cpass', views.cpass, name='cpass'),
     path('signup', views.signup, name='signup'),
     path('login' ,views.login, name='login'),
     path('logout' ,views.logout, name='logout'),
     path('fpass' ,views.fpass, name='fpass'),
+    path('otp' ,views.otp, name='otp'),
 ]
 
