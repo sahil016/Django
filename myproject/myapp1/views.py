@@ -116,7 +116,8 @@ def signup(request):
                     name = request.POST['name'],
                     email = request.POST['email'],
                     mobile = request.POST['mobile'],
-                    password = request.POST['password']
+                    password = request.POST['password'],
+                    profile = request.FILES['profile']
                 )
 
                 msg = "Signup Succesfuly"
@@ -134,6 +135,7 @@ def login(request):
 
             if user.password == request.POST['password']:
                 request.session['email']=user.email
+                request.session['profile']=user.profile.url
 
                 return redirect('index')
             else:
@@ -189,8 +191,12 @@ def otp(request):
     if request.method == "POST":
         
         try:
-            uotp=request.POST['uotp']
-            otp= int(request.session['otp'])
+            uotp = request.POST.get('uotp')  # Get user input OTP as a string
+            otp = str(request.session.get('otp'))  # Convert session OTP to a string
+            
+            print(f"Session OTP: {otp}")
+            print(f"User entered OTP: {uotp}")
+
             
             if otp == uotp:
                 del request.session['otp']
@@ -201,22 +207,43 @@ def otp(request):
             
             
         except Exception as e:
-            print("*****************",e)
+            print(f"Error during OTP validation: {e}")
             return render(request,'otp.html')
             
 def newpass(request):
     if request.method == "POST":
         try:
-            user = User.objects.get(mmobile=request.session['mobile'])
-            if request.POST['npassword']==request.POST['cpassword']:
+            user = User.objects.get(mobile=request.session['mobile'])
+            if request.POST['npassword']==request.POST['cnpassword']:
                 user.password = request.POST['npassword']
                 user.save()
                 del request.session['mobile']
                 return redirect('login')
             else:
-                msg = "New password & confirm new passwoerd does not match!!"
-                
+                msg = "New password & confirm new passwoerd does not match!!"   
                 return render(request,'newpass.html',{'msg':msg})
-            
+        except User.DoesNotExist:
+            msg = "User does not exist or session expired."
+            return render(request, 'newpass.html', {'msg': msg})
+        
         except Exception as e:
             print('***************',e)
+            msg = "An unexpected error occurred. Please try again."
+            return render(request, 'newpass.html', {'msg': msg})
+    else:
+        return render(request, 'newpass.html')
+    
+    
+def cprofile(request):
+    user = User.objects.get(email=request.session['email'])
+    
+    if request.method == "POST":
+        try:
+            user.name=request.POST['name']
+            user.mobile=request.POST['mobile']
+            user.save()
+            return redirect('index')
+        except:
+            pass
+    else:
+        return render(request,'cprofile.html',{'user':user})
