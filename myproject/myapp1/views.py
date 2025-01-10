@@ -189,7 +189,7 @@ def otp(request):
     if request.method == "POST":
         
         try:
-            uotp=request.POST['uotp']
+            uotp=int(request.POST['uotp'])
             otp= int(request.session['otp'])
             
             if otp == uotp:
