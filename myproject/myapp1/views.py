@@ -151,6 +151,7 @@ def login(request):
 
 def logout(request):
     del request.session['email']
+    del request.session['profile']
     return redirect('login')
 
 
@@ -238,12 +239,19 @@ def cprofile(request):
     user = User.objects.get(email=request.session['email'])
     
     if request.method == "POST":
+    
+        user.name=request.POST['name']
+        user.mobile=request.POST['mobile']
         try:
-            user.name=request.POST['name']
-            user.mobile=request.POST['mobile']
+            user.profile = request.FILES['profile']
             user.save()
+            request.session['uprofile']=user.profile.url
             return redirect('index')
-        except:
-            pass
+        except Exception as e:
+            print(f"Error during profile update: {e}")
+        user.save()
+        return redirect('index')
+        
+        
     else:
         return render(request,'cprofile.html',{'user':user})
