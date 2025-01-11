@@ -51,47 +51,34 @@ from .models import User
 def cpass(request):
     if request.method == "POST":
         try:
-            # Check if the email is in the session, and handle accordingly
-            if 'email' not in request.session:
-                msg = "You must be logged in to change your password."
-                return redirect('login')  # Redirect to the login page if email is not found in session
 
-            # Get the user from the session email
             user = User.objects.get(email=request.session['email'])
 
-            # Check if the old password matches
+           
             if user.password == request.POST['opassword']:
-                # Check if the new password and confirm new password match
+               
                 if request.POST['npassword'] == request.POST['cnpassword']:
                     user.password = request.POST['npassword']
                     user.save()
-                    return redirect('logout')  # Redirect to logout after successful password change
+                    return redirect('logout')  
                 else:
-                    # Passwords don't match, return error message
+                
                     msg = "Password & confirm password do not match"
                     return render(request, 'cpass.html', {'msg': msg})
 
             else:
-                # Old password does not match, return error message
+                
                 msg = "Old Password does not match"
                 return render(request, 'cpass.html', {'msg': msg})
 
-        except User.DoesNotExist:
-            # Handle case where the user is not found (in case of session issues)
-            msg = "User not found"
-            return render(request, 'cpass.html', {'msg': msg})
-
+       
         except Exception as e:
-            # Catch any other unexpected exceptions and log them if necessary
-            print(f"An error occurred: {e}")
-            msg = "An unexpected error occurred"
-            return render(request, 'cpass.html', {'msg': msg})
+            
+            print("*************",e)
+            
+            return render(request, 'cpass.html')
 
     else:
-        # Handle GET request (render the form)
-        if 'email' not in request.session:
-            # Redirect to login page if the user is not logged in
-            return redirect('login')
         return render(request, 'cpass.html')
 
 
