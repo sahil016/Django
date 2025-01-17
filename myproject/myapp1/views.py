@@ -150,8 +150,10 @@ def login(request):
 
 
 def logout(request):
-    del request.session['email']
-    del request.session['profile']
+    # del request.session['email']
+    # del request.session['profile']
+    request.session.flush()  # Clears all session data
+    request.session.flush()  # Clears all session data
     return redirect('login')
 
 
@@ -192,18 +194,15 @@ def otp(request):
     if request.method == "POST":
         
         try:
-<<<<<<< HEAD
             uotp=int(request.POST['uotp'])
             otp= int(request.session['otp'])
-=======
             uotp = request.POST.get('uotp')  # Get user input OTP as a string
             otp = str(request.session.get('otp'))  # Convert session OTP to a string
             
             print(f"Session OTP: {otp}")
             print(f"User entered OTP: {uotp}")
 
->>>>>>> d7d15726d1d84ea6f1690900facb013c7a060d50
-            
+
             if otp == uotp:
                 del request.session['otp']
                 return render(request,'newpass.html')
