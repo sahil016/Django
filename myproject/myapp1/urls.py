@@ -28,6 +28,11 @@ urlpatterns = [
     path('otp' ,views.otp, name='otp'),
     path('newpass' ,views.newpass, name='newpass'),
     path('cprofile' ,views.cprofile, name='cprofile'),
+    path('sindex' ,views.sindex, name='sindex'),
+    path('scpass' ,views.scpass, name='scpass'),
+    path('scprofile' ,views.scprofile, name='scprofile'),
+    path('add' ,views.add, name='add'),
+    path('view' ,views.view, name='view'),
     
 ]
 

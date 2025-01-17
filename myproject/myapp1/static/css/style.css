@@ -168,6 +168,23 @@ img {
   vertical-align: middle;
   border-style: none; }
 
+  .img-prod {
+    width: 100%; /* Full width of the column */
+    height: 200px; /* Fixed height */
+    overflow: hidden; /* Hide overflow */
+    position: relative; /* Position relative for overlay */
+  }
+  
+  .img-prod img {
+    width: 100%; /* Full width */
+    height: 200px; /* Maintain aspect ratio */
+    position: absolute; /* Position absolute to fill the container */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Center the image */
+    object-fit: cover; /* Cover the container */
+  }
+  
 svg {
   overflow: hidden;
   vertical-align: middle; }

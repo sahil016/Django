@@ -49,51 +49,47 @@ from django.shortcuts import render, redirect
 from .models import User
 
 def cpass(request):
+    user = User.objects.get(email=request.session['email'])
     if request.method == "POST":
         try:
-            # Check if the email is in the session, and handle accordingly
-            if 'email' not in request.session:
-                msg = "You must be logged in to change your password."
-                return redirect('login')  # Redirect to the login page if email is not found in session
 
-            # Get the user from the session email
-            user = User.objects.get(email=request.session['email'])
+            
 
-            # Check if the old password matches
+           
             if user.password == request.POST['opassword']:
-                # Check if the new password and confirm new password match
+               
                 if request.POST['npassword'] == request.POST['cnpassword']:
                     user.password = request.POST['npassword']
                     user.save()
-                    return redirect('logout')  # Redirect to logout after successful password change
+                    return redirect('logout')  
                 else:
-                    # Passwords don't match, return error message
+                
                     msg = "Password & confirm password do not match"
-                    return render(request, 'cpass.html', {'msg': msg})
+                    if user.usertype=="buyer":
+                        return render(request,'cpass.html', {'msg': msg})
+                    else:
+                        return render(request, 'scpass.html', {'msg': msg})
 
             else:
-                # Old password does not match, return error message
+                
                 msg = "Old Password does not match"
-                return render(request, 'cpass.html', {'msg': msg})
-
-        except User.DoesNotExist:
-            # Handle case where the user is not found (in case of session issues)
-            msg = "User not found"
-            return render(request, 'cpass.html', {'msg': msg})
-
+                if user.usertype=="buyer":
+                    return render(request, 'cpass.html', {'msg': msg})
+                else:
+                    return render(request, 'scpass.html', {'msg': msg})
+                    
+       
         except Exception as e:
-            # Catch any other unexpected exceptions and log them if necessary
-            print(f"An error occurred: {e}")
-            msg = "An unexpected error occurred"
-            return render(request, 'cpass.html', {'msg': msg})
+            
+            print("*************",e)
+            
+            return render(request, 'cpass.html')
 
     else:
-        # Handle GET request (render the form)
-        if 'email' not in request.session:
-            # Redirect to login page if the user is not logged in
-            return redirect('login')
-        return render(request, 'cpass.html')
-
+        if user.usertype=="buyer":
+            return render(request, 'cpass.html')
+        else:
+            return render(request, 'scpass.html')
 
 
 def about(request):
@@ -112,7 +108,7 @@ def signup(request):
         except:
             if request.POST['password']==request.POST['password']:
                 User.objects.create(
-                    
+                    usertype=request.POST['usertype'],  
                     name = request.POST['name'],
                     email = request.POST['email'],
                     mobile = request.POST['mobile'],
@@ -136,8 +132,12 @@ def login(request):
             if user.password == request.POST['password']:
                 request.session['email']=user.email
                 request.session['profile']=user.profile.url
-
-                return redirect('index')
+                
+            
+                if user.usertype=="buyer":
+                    return redirect('index')
+                else:
+                    return redirect('sindex')
             else:
                 msg = "Invalid Password!!"
                 return render(request,'login.html',{'msg':msg})
@@ -194,15 +194,26 @@ def otp(request):
     if request.method == "POST":
         
         try:
+<<<<<<< HEAD
             uotp=int(request.POST['uotp'])
             otp= int(request.session['otp'])
+=======
+
+            uotp=int(request.POST['uotp'])
+            otp= int(request.session['otp'])
+
+>>>>>>> 55e22f05864c87feb8c417651e94bdcd0d852882
             uotp = request.POST.get('uotp')  # Get user input OTP as a string
             otp = str(request.session.get('otp'))  # Convert session OTP to a string
             
             print(f"Session OTP: {otp}")
             print(f"User entered OTP: {uotp}")
 
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> 55e22f05864c87feb8c417651e94bdcd0d852882
             if otp == uotp:
                 del request.session['otp']
                 return render(request,'newpass.html')
@@ -249,8 +260,11 @@ def cprofile(request):
         try:
             user.profile = request.FILES['profile']
             user.save()
-            request.session['uprofile']=user.profile.url
-            return redirect('index')
+            request.session['profile']=user.profile.url
+            if user.usertype=="buyer":
+                return redirect('index')
+            else:
+                return redirect('sindex')
         except Exception as e:
             print(f"Error during profile update: {e}")
         user.save()
@@ -258,4 +272,49 @@ def cprofile(request):
         
         
     else:
-        return render(request,'cprofile.html',{'user':user})
+        if user.usertype=="buyer":
+            return render(request,'cprofile.html',{'user':user})
+        else:
+            return render(request,'scprofile.html',{'user':user})
+    
+    
+    
+    
+def sindex(request):
+    return render(request, 'sindex.html')
+
+def scpass(request):
+    return render(request,"scpass.html")
+
+def scprofile(request):
+    return render(request,'scprofile.html')
+
+def add(request):
+    if request.method == "POST":
+        seller = User.objects.get(email=request.session['email'])
+        
+        try:
+           Product.objects.create(
+               
+            seller = seller,
+            pname = request.POST['pname'],
+            scategory = request.POST['scategory'],
+            sbrand = request.POST['sbrand'],
+            ssize = request.POST['ssize'],
+            price = request.POST['price'],
+            description = request.POST['description'],
+            image = request.FILES['image']
+           )
+           msg = "Product added succesfully!!"
+           return render(request,'add.html',{'msg':msg})
+        except Exception as e:
+            print("****************",e)
+            return redirect('add',{'e':e})
+    else:
+        return render(request,'add.html')
+            
+            
+def view(request):
+    seller = User.objects.get(email = request.session['email'])
+    product = Product.objects.filter(seller=seller)
+    return render(request,'view.html',{'product':product})    
