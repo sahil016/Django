@@ -33,6 +33,7 @@ urlpatterns = [
     path('scprofile' ,views.scprofile, name='scprofile'),
     path('add' ,views.add, name='add'),
     path('view' ,views.view, name='view'),
+    path('update/<int:product_id>/' ,views.update, name='update'),
     
 ]
 

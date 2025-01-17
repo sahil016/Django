@@ -126,6 +126,7 @@ def signup(request):
 
 def login(request):
     if request.method=="POST":
+
         try:
             user = User.objects.get(email=request.POST['email'])
 
@@ -146,7 +147,9 @@ def login(request):
             msg = "Invalid Email!!"
             return render(request,'login.html',{'msg':msg})
     else:
-        return render(request,'login.html')
+        
+
+            return render(request,'login.html')
 
 
 def logout(request):
@@ -194,26 +197,25 @@ def otp(request):
     if request.method == "POST":
         
         try:
-<<<<<<< HEAD
-            uotp=int(request.POST['uotp'])
-            otp= int(request.session['otp'])
-=======
 
             uotp=int(request.POST['uotp'])
             otp= int(request.session['otp'])
 
->>>>>>> 55e22f05864c87feb8c417651e94bdcd0d852882
-            uotp = request.POST.get('uotp')  # Get user input OTP as a string
-            otp = str(request.session.get('otp'))  # Convert session OTP to a string
+            uotp=int(request.POST['uotp'])
+            otp= int(request.session['otp'])
+
+
+            uotp = request.POST.get('uotp') 
+            otp = str(request.session.get('otp')) 
             
             print(f"Session OTP: {otp}")
             print(f"User entered OTP: {uotp}")
 
-<<<<<<< HEAD
 
-=======
+
+
             
->>>>>>> 55e22f05864c87feb8c417651e94bdcd0d852882
+
             if otp == uotp:
                 del request.session['otp']
                 return render(request,'newpass.html')
@@ -318,3 +320,16 @@ def view(request):
     seller = User.objects.get(email = request.session['email'])
     product = Product.objects.filter(seller=seller)
     return render(request,'view.html',{'product':product})    
+
+def update(request,):
+    seller=User.objects.get(email=request.session['email'])
+    product = Product.objects.filter(seller=seller)
+
+    if request.method=='POST':
+        product.name = request.POST.get('name')
+        product.description = request.POST.get('description')
+        product.price = request.POST.get('price')
+        product.save()
+        return redirect('update') 
+    else:
+        return render(request,'update.html',{'product':product})
