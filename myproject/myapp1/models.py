@@ -47,3 +47,9 @@ class Product(models.Model):
     
     def __str__(self):
         return self.pname
+    
+    
+class cart(models.Model):
+    user  = models.OneToOneField(User, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product, blank=True)
+    total = models.IntegerField (default=0)

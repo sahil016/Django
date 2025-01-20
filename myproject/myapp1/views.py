@@ -321,15 +321,35 @@ def view(request):
     product = Product.objects.filter(seller=seller)
     return render(request,'view.html',{'product':product})    
 
-def update(request,):
-    seller=User.objects.get(email=request.session['email'])
-    product = Product.objects.filter(seller=seller)
+def update(request, pk):
+    seller = User.objects.get(email=request.session['email'])
+    product = Product.objects.get(pk=pk)
 
-    if request.method=='POST':
-        product.name = request.POST.get('name')
+    if request.method == 'POST':
+        product.name = request.POST.get('pname')
         product.description = request.POST.get('description')
         product.price = request.POST.get('price')
-        product.save()
-        return redirect('update') 
+
+        image = request.FILES.get('image')
+        if image:
+            product.image = image 
+          
+        product.save() 
+
+        return redirect('update', pk=product.pk) 
     else:
-        return render(request,'update.html',{'product':product})
+        return render(request, 'update.html', {'product': product})
+    
+def delete(request,pk):
+    seller = User.objects.get(email=request.session['email'])
+    product = Product.objects.get(pk=pk)
+    
+    product.delete()
+    return redirect('view')
+
+def shop(request):
+    products = Product.objects.all()  # Get all products
+    return render(request, 'shop.html', {'products': products})  # Pass 'products' to template
+
+def add_to_cart(request):   
+    return redirect(request,'cart.html')

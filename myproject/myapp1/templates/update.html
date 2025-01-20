@@ -55,22 +55,65 @@
               
                 <select class="form-control" name="scategory">
                   <option>-- Select Category --</option>
-                  <option value="Men">Men</option>
+                  {% if product.scategory == "Men" %}
+                  <option value="Men" selected>Men</option>
                   <option value="Women">Women</option>
                   <option value="Kids">Kids</option>
+
+                  {% elif product.scategory == "Women" %}
+                  <option value="Men" >Men</option>
+                  <option value="Women" selected>Women</option>
+                  <option value="Kids">Kids</option>
+
+                  {% elif product.scategory == "Kids" %}
+                  <option value="Men" >Men</option>
+                  <option value="Women">Women</option>
+                  <option value="Kids" selected >Kids</option>
+                  {% endif %}
                 </select>
+               
               </div>
 
               <div class="form-group">
               
                 <select class="form-control" name="sbrand">
                   <option>-- Select Brand --</option>
-                  <option value="Raymond">Raymond</option>
+                  {% if product.sbrand == "Raymond" %}
+                  <option value="Raymond" selected>Raymond</option>
                   <option value="Levis">Levis</option>
                   <option value="Puma">Puma</option>
                   <option value="Nike">Nike</option>
                   <option value="Adidas">Adidas</option>
 
+              
+                  {% elif product.sbrand == "Levis" %}
+                  <option value="Raymond">Raymond</option>
+                  <option value="Levis" selected>Levis</option>
+                  <option value="Puma">Puma</option>
+                  <option value="Nike">Nike</option>
+                  <option value="Adidas">Adidas</option>
+
+                  {% elif product.sbrand == "Puma" %}
+                  <option value="Raymond">Raymond</option>
+                  <option value="Levis">Levis</option>
+                  <option value="Puma" selected>Puma</option>
+                  <option value="Nike">Nike</option>
+                  <option value="Adidas">Adidas</option>
+
+                  {% elif product.sbrand == "Nike" %}
+                  <option value="Raymond">Raymond</option>
+                  <option value="Levis">Levis</option>
+                  <option value="Puma">Puma</option>
+                  <option value="Nike" selected>Nike</option>
+                  <option value="Adidas">Adidas</option>
+
+                  {% elif product.sbrand == "Levis" %}
+                  <option value="Raymond">Raymond</option>
+                  <option value="Levis">Levis</option>
+                  <option value="Puma">Puma</option>
+                  <option value="Nike">Nike</option>
+                  <option value="Adidas" selected>Adidas</option>
+                  {% endif %} 
                 </select>
               </div>
 
@@ -78,25 +121,56 @@
               
                 <select class="form-control" name="ssize">
                   <option>-- Select Size --</option>
-                  <option value="S">S</option>
+                  {% if  product.ssize == "S"%}
+                  <option value="S" selected>S</option>
                   <option value="M">M</option>
                   <option value="L">L</option>
                   <option value="XL">XL</option>
                   <option value="XXL">XXL</option>
+
+                  {% elif  product.ssize == "M"%}
+                  <option value="S">S</option>
+                  <option value="M" selected >M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+
+                  {% elif  product.ssize == "L"%}
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L" selected >L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+
+                  {% elif  product.ssize == "XL"%}
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL" selected>XL</option>
+                  <option value="XXL">XXL</option>
+
+                  {% elif  product.ssize == "XXL"%}
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL" selected  >XXL</option>
+
+                  {% endif %}
                 </select>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your Product Name" name="pname" value="{{seller.pname}}">
+                <input type="text" class="form-control" name="pname" value="{{product.pname}}">
               </div>
               <div class="form-group">
-                <input type="Number" class="form-control" placeholder="Your Price" name="price">
+                <input type="Number" class="form-control"  name="price" value={{product.price}}>
               </div>
               <div class="form-group">
-                <textarea class="form-control"  name="description"></textarea>
+                <textarea class="form-control"  name="description">{{product.description}}</textarea>
               </div>
-
+              <img src="{% if product.image %}{{ product.image.url }}{% else %}{{ STATIC_URL }}images/default-image.jpg{% endif %}" height="120px" width="120px" style="margin-bottom: 15px">
               <div class="form-group">
-                <input type="FILE" class="form-control" name="image">
+                <input type="FILE" class="form-control" name="image" >
               </div>
               <div class="form-group">
                 <input type="submit" value="Add-Product" class="btn btn-primary py-3 px-5">

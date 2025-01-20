@@ -16,6 +16,9 @@ Including another URLconf
 """
 from django.urls import path
 from myapp1 import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('home', views.home, name='home'),
     path('index/', views.index, name='index'),  # This will map the home view to the root URL
@@ -33,7 +36,10 @@ urlpatterns = [
     path('scprofile' ,views.scprofile, name='scprofile'),
     path('add' ,views.add, name='add'),
     path('view' ,views.view, name='view'),
-    path('update/<int:product_id>/' ,views.update, name='update'),
+    path('update/<int:pk>' ,views.update, name='update'),
+    path('delete/<int:pk>' ,views.delete, name='delete'),
+    path('shop' ,views.shop, name='shop'),
+    path('add-to-cart' ,views.add_to_cart, name='add-to-cart'),
     
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
