@@ -12,37 +12,6 @@ def index(request):
     return render(request,'index.html')
 
 
-""" def cpass(request):
-    if request.method=="POST":
-        try:
-            user = User.objects.get(email=request.session['email'])
-
-            if user.password==request.POST['opassword']:
-                if request.POST['npassword']==request.POST['cnpassword']:
-                    user.password=request.POST['npassword']
-                    user.save()
-                    return redirect('logout')
-                else:
-                    msg = "Password & confirm password does not match"
-                    return render(request, 'cpass.html',{'msg':msg})
-            else:
-                msg = "Old Password does not match"
-                return render(request, 'cpass.html',{'msg':msg})
-                    
-        except User.DoesNotExist:
-            # Handle case where the user is not found (in case of session issues)
-            msg = "User not found"
-            return render(request, 'cpass.html', {'msg': msg})
-
-        except Exception as e:
-            # Catch any other unexpected exceptions and log them if necessary
-            print(f"An error occurred: {e}")
-            msg = "An unexpected error occurred"
-            return render(request, 'cpass.html', {'msg': msg})
-            
-    else:
-        return render(request,'cpass.html')
- """
 
 
 from django.shortcuts import render, redirect
