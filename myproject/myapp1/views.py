@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
 from django.contrib import messages
 import random
@@ -349,7 +349,28 @@ def delete(request,pk):
 
 def shop(request):
     products = Product.objects.all()  # Get all products
-    return render(request, 'shop.html', {'products': products})  # Pass 'products' to template
+    wishlist = None
+    if request.user.is_authenticated:
+        wishlist = Wishlist.objects.filter(user=request.user).first() 
+        print("Wishlist PK:", wishlist.pk if wishlist else "No wishlist found") 
+    return render(request, 'shop.html', {'products': products})  
 
-def add_to_cart(request):   
+def add_to_cart(request):  
+     
     return redirect(request,'cart.html')
+
+def wishlist(request,pk):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login page if the user is not authenticated
+    
+    # Retrieve or create the wishlist for the user
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+    # Retrieve the product to be added to the wishlist
+    product = get_object_or_404(Product, pk=pk)
+    
+    # Add the product to the wishlist
+    wishlist.Product.add(product)
+    
+    # Redirect back to the wishlist page (or wherever you want)
+    return redirect('wishlist', pk=wishlist.pk)
