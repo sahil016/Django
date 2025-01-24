@@ -39,6 +39,7 @@ urlpatterns = [
     path('update/<int:pk>' ,views.update, name='update'),
     path('delete/<int:pk>' ,views.delete, name='delete'),
     path('shop' ,views.shop, name='shop'),
+    path('wishlist/<int:pk>/' ,views.wishlist, name='wishlist'),
     path('add-to-cart' ,views.add_to_cart, name='add-to-cart'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
