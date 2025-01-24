@@ -90,8 +90,8 @@ def signup(request):
             else:
                 msg = "Password & confirm password does not match"
                 return render(request,'signup.html',{'msg':msg})
-    else:  # Handle GET request
-        return render(request, 'signup.html')  # Render the signup page with no messages
+    else: 
+        return render(request, 'signup.html')  
 
 def login(request):
     if request.method=="POST":
@@ -317,8 +317,8 @@ def delete(request,pk):
     return redirect('view')
 
 def shop(request):
-    products = Product.objects.all()  # Get all products
-    return render(request, 'shop.html', {'products': products})  # Pass 'products' to template
+    products = Product.objects.all()  
+    return render(request, 'shop.html', {'products': products})  
 
-def add_to_cart(request):   
-    return redirect(request,'cart.html')
+def add_to_cart(request,pk):
+    return render(request,'cart.html')
