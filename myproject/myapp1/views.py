@@ -321,28 +321,52 @@ def shop(request):
     products = Product.objects.all()  
     return render(request, 'shop.html', {'products': products})  
 
-def add_to_cart(request,pk):
-    return render(request,'cart.html')
 
-    products = Product.objects.all()  # Get all products
-    wishlist = None
-    if request.user.is_authenticated:
-        wishlist = Wishlist.objects.filter(user=request.user).first() 
-        print("Wishlist PK:", wishlist.pk if wishlist else "No wishlist found") 
-    return render(request, 'shop.html', {'products': products})  
 
-def add_to_cart(request):  
-     
-    return redirect(request,'cart.html')
+def add_to_cart(request):
+    user = User.objects.get(email=request.session['email'])
+    
+    product_id = request.POST.get('product_id')
+    
+    product = Product.objects.get(pk=product_id)
+    
+   
+    cart = Cart.objects.filter(user=user, product=product)
+    
+    if cart.exists():
+        
+        cart = cart.first()
+        cart.quantity += 1
+        cart.save()
+    else:
+       
+        cart = Cart(user=user, product=product, quantity=1)
+        cart.save()
+
+    # Redirect to the cart page
+    return redirect('cart')
 
 def wishlist(request,pk):
 
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    
-    product = get_object_or_404(Product, pk=pk)
-    
-    wishlist.Product.add(product)
-    
-    
-    return redirect('wishlist', pk=wishlist.pk)
+   user  = User.objects.get(email=request.session['email'])
+   product = Product.objects.get(pk=pk)
+   wishlist = Wishlist.objects.filter(user=user).first()
+   if wishlist:
+       wishlist.product.add(product)
+   else:
+       wishlist = Wishlist(user=user)
+       wishlist.save()
+       wishlist.product.add(product)
+       
+   products_in_wishlist = wishlist.product.all()  # All products in the wishlist
+   return render(request, 'wishlist.html', {'products': products_in_wishlist})
 
+def wish(request):
+    user = User.objects.get(email=request.session['email'])
+    wishlist = Wishlist.objects.filter(user=user).first()
+    products = wishlist.product.all()
+    return render(request, 'wishlist.html', {'products': products})
+
+def details(request,pk):
+    product = Product.objects.get(pk=pk)
+    return render(request, 'product-single.html', {'product': product})
