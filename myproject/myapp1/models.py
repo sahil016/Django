@@ -54,9 +54,6 @@ class cart(models.Model):
     product = models.ManyToManyField(Product, blank=True)
     total = models.IntegerField (default=0)
     
-class Wishlist (models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    Product = models.ManyToManyField(Product)
-    
-    def __str__(self):
-        return  f"Wishlist of {self.user.username} - {self.Product.count()} items"
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product)

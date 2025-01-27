@@ -329,17 +329,21 @@ def add_to_cart(request):
     return redirect(request,'cart.html')
 
 def wishlist(request,pk):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login page if the user is not authenticated
-    
-    # Retrieve or create the wishlist for the user
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    
-    # Retrieve the product to be added to the wishlist
-    product = get_object_or_404(Product, pk=pk)
-    
-    # Add the product to the wishlist
-    wishlist.Product.add(product)
-    
-    # Redirect back to the wishlist page (or wherever you want)
-    return redirect('wishlist', pk=wishlist.pk)
+   user  = User.objects.get(email=request.session['email'])
+   product = Product.objects.get(pk=pk)
+   wishlist = Wishlist.objects.filter(user=user).first()
+   if wishlist:
+       wishlist.product.add(product)
+   else:
+       wishlist = Wishlist(user=user)
+       wishlist.save()
+       wishlist.product.add(product)
+       
+   products_in_wishlist = wishlist.product.all()  # All products in the wishlist
+   return render(request, 'wishlist.html', {'products': products_in_wishlist})
+
+def wish(request):
+    user = User.objects.get(email=request.session['email'])
+    wishlist = Wishlist.objects.filter(user=user).first()
+    products = wishlist.product.all()
+    return render(request, 'wishlist.html', {'products': products})
