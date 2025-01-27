@@ -317,13 +317,13 @@ def delete(request,pk):
     return redirect('view')
 
 def shop(request):
-<<<<<<< HEAD
+
     products = Product.objects.all()  
     return render(request, 'shop.html', {'products': products})  
 
 def add_to_cart(request,pk):
     return render(request,'cart.html')
-=======
+
     products = Product.objects.all()  # Get all products
     wishlist = None
     if request.user.is_authenticated:
@@ -336,18 +336,13 @@ def add_to_cart(request):
     return redirect(request,'cart.html')
 
 def wishlist(request,pk):
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login page if the user is not authenticated
-    
-    # Retrieve or create the wishlist for the user
+
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     
-    # Retrieve the product to be added to the wishlist
     product = get_object_or_404(Product, pk=pk)
     
-    # Add the product to the wishlist
     wishlist.Product.add(product)
     
-    # Redirect back to the wishlist page (or wherever you want)
+    
     return redirect('wishlist', pk=wishlist.pk)
->>>>>>> c78d3324b1852c988313c2fd71628b96f5323c9d
+
