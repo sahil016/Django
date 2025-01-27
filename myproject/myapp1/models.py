@@ -49,7 +49,7 @@ class Product(models.Model):
         return self.pname
     
     
-class cart(models.Model):
+class Cart(models.Model):
     user  = models.OneToOneField(User, on_delete=models.CASCADE)
     product = models.ManyToManyField(Product, blank=True)
     total = models.IntegerField (default=0)

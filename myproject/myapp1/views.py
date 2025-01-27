@@ -317,26 +317,37 @@ def delete(request,pk):
     return redirect('view')
 
 def shop(request):
-<<<<<<< HEAD
+
     products = Product.objects.all()  
     return render(request, 'shop.html', {'products': products})  
 
-def add_to_cart(request,pk):
-    return render(request,'cart.html')
-=======
-    products = Product.objects.all()  # Get all products
-    wishlist = None
-    if request.user.is_authenticated:
-        wishlist = Wishlist.objects.filter(user=request.user).first() 
-        print("Wishlist PK:", wishlist.pk if wishlist else "No wishlist found") 
-    return render(request, 'shop.html', {'products': products})  
 
-def add_to_cart(request):  
-     
-    return redirect(request,'cart.html')
+
+def add_to_cart(request):
+    user = User.objects.get(email=request.session['email'])
+    
+    product_id = request.POST.get('product_id')
+    
+    product = Product.objects.get(pk=product_id)
+    
+   
+    cart = Cart.objects.filter(user=user, product=product)
+    
+    if cart.exists():
+        
+        cart = cart.first()
+        cart.quantity += 1
+        cart.save()
+    else:
+       
+        cart = Cart(user=user, product=product, quantity=1)
+        cart.save()
+
+    # Redirect to the cart page
+    return redirect('cart')
 
 def wishlist(request,pk):
-<<<<<<< HEAD
+
    user  = User.objects.get(email=request.session['email'])
    product = Product.objects.get(pk=pk)
    wishlist = Wishlist.objects.filter(user=user).first()
@@ -355,20 +366,7 @@ def wish(request):
     wishlist = Wishlist.objects.filter(user=user).first()
     products = wishlist.product.all()
     return render(request, 'wishlist.html', {'products': products})
-=======
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login page if the user is not authenticated
-    
-    # Retrieve or create the wishlist for the user
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    
-    # Retrieve the product to be added to the wishlist
-    product = get_object_or_404(Product, pk=pk)
-    
-    # Add the product to the wishlist
-    wishlist.Product.add(product)
-    
-    # Redirect back to the wishlist page (or wherever you want)
-    return redirect('wishlist', pk=wishlist.pk)
->>>>>>> c78d3324b1852c988313c2fd71628b96f5323c9d
->>>>>>> eb875fa57cb73ccf9b6ddedec2692f8a6db9034c
+
+def details(request,pk):
+    product = Product.objects.get(pk=pk)
+    return render(request, 'product-single.html', {'product': product})

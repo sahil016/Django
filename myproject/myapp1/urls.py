@@ -42,6 +42,7 @@ urlpatterns = [
     path('wishlist/<int:pk>/' ,views.wishlist, name='wishlist'),
     path('add-to-cart' ,views.add_to_cart, name='add-to-cart'),
     path('wish' ,views.wish, name='wish'),
+    path('detail/<int:pk>' ,views.details, name='details'),
     
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
