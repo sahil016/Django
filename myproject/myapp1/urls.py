@@ -39,11 +39,14 @@ urlpatterns = [
     path('update/<int:pk>' ,views.update, name='update'),
     path('delete/<int:pk>' ,views.delete, name='delete'),
     path('shop' ,views.shop, name='shop'),
-    path('wishlist/<int:pk>/' ,views.wishlist, name='wishlist'),
-    path('add-to-cart' ,views.add_to_cart, name='add-to-cart'),
-    path('wish' ,views.wish, name='wish'),
+    path('wishlist' ,views.wishlist, name='wishlist'),
+    path('addwish/<int:pk>' ,views.addwish, name='addwish'),
+
+    path('add-to-cart/<int:pk>/', views.add_to_cart, name='add_to_cart'),  # Add this
     path('detail/<int:pk>' ,views.details, name='details'),
-    
-    
+    path('dwishlist/<int:pk>',views.dwishlist,name='dwishlist' ),
+    path('cart',views.cart,name='cart'),
+
+    path('del_cart/<int:pk>/', views.del_cart, name='del_cart'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

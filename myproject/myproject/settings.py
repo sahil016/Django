@@ -17,6 +17,11 @@ import os
 # In settings.py
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,10 +72,12 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'myapp1.context_processors.cart_count',  # Replace 'myapp1' with your actual app name
+
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },

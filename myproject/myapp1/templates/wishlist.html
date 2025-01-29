@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block content %}
+<head>
+
+</head>
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row justify-content-center mb-3 pb-3">
@@ -12,22 +15,23 @@
         </div>
 
         <div class="row">
-            {% for i in products %}
+            {% for i in wishlist %}
             <div class="col-sm-6 col-md-4 col-lg-3 ftco-animate">
                 <div class="product d-flex flex-column">
                     <a href="#" class="img-prod">
-                        {% if i.image %}
-                            <img class="img-fluid" src="{{ i.image.url }}" alt="{{ i.pname }}" class="product-image">
+                        {% if i.product.image %}
+                            <img class="img-fluid product-image" src="{{ i.product.image.url }}" alt="{{ i.product.pname }}">
                         {% else %}
-                            <img class="img-fluid" src="{% static 'default-image.jpg' %}" alt="Default Image" class="product-image">
+                            <img class="img-fluid product-image" src="{% static 'default-image.jpg' %}" alt="Default Image">
                         {% endif %}
                         <div class="overlay"></div>
                     </a>
+                    
                     <div class="text py-3 px-3 flex-grow-1">
-                        <h3><a href="#">{{ i.pname }}</a></h3>
+                        <h3><a href="#">{{ i.product.pname }}</a></h3>
                         <div class="d-flex justify-content-between">
                             <div class="pricing">
-                                <p class="price"><span>${{ i.price }}</span></p>
+                                <p class="price"><span>${{ i.product.price|floatformat:2 }}</span></p>
                             </div>
                             <div class="rating">
                                 <p class="text-right">
@@ -39,12 +43,9 @@
                                 </p>
                             </div>
                         </div>
-                        <p class="bottom-area d-flex justify-content-between px-3">
-                            <a href="{% url 'update' pk=i.pk %}" class="add-to-cart text-center py-2 mr-1">
-                                <span>Update  <i class="ion-ios-create ml-1"></i></span>
-                            </a>
-                            <a href="{% url 'delete' pk=i.pk %}" class="buy-now text-center py-2">
-                                <span>Delete  <i class="ion-ios-trash ml-1"></i></span>
+                    
+                            <a href="{% url 'dwishlist' pk=i.pk %}" class="buy-now text-center py-2">
+                                <span>Delete <i class="ion-ios-trash ml-1"></i></span>
                             </a>
                         </p>
                     </div>

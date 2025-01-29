@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 
 class User(models.Model):
@@ -48,12 +48,12 @@ class Product(models.Model):
     def __str__(self):
         return self.pname
     
-    
-class cart(models.Model):
-    user  = models.OneToOneField(User, on_delete=models.CASCADE)
-    product = models.ManyToManyField(Product, blank=True)
-    total = models.IntegerField (default=0)
-    
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ManyToManyField(Product)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    ttime =  models.DateTimeField(default=timezone.now)
+    
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+   

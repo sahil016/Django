@@ -4,18 +4,19 @@ from django.contrib import messages
 import random
 import requests
 
+from django.shortcuts import render, redirect
+from .models import User
+
 # Create your views here.
 def home(request):
     return render(request,'home.html')
 
 def index(request):
-    return render(request,'index.html')
+    products = Product.objects.all()  
+    return render(request,'index.html',{'products':products})
 
 
 
-
-from django.shortcuts import render, redirect
-from .models import User
 
 def cpass(request):
     user = User.objects.get(email=request.session['email'])
@@ -321,52 +322,66 @@ def shop(request):
     products = Product.objects.all()  
     return render(request, 'shop.html', {'products': products})  
 
-
-
-def add_to_cart(request):
-    user = User.objects.get(email=request.session['email'])
-    
-    product_id = request.POST.get('product_id')
-    
-    product = Product.objects.get(pk=product_id)
-    
-   
-    cart = Cart.objects.filter(user=user, product=product)
-    
-    if cart.exists():
-        
-        cart = cart.first()
-        cart.quantity += 1
-        cart.save()
-    else:
-       
-        cart = Cart(user=user, product=product, quantity=1)
-        cart.save()
-
-    # Redirect to the cart page
-    return redirect('cart')
-
-def wishlist(request,pk):
-
-   user  = User.objects.get(email=request.session['email'])
-   product = Product.objects.get(pk=pk)
-   wishlist = Wishlist.objects.filter(user=user).first()
-   if wishlist:
-       wishlist.product.add(product)
-   else:
-       wishlist = Wishlist(user=user)
-       wishlist.save()
-       wishlist.product.add(product)
-       
-   products_in_wishlist = wishlist.product.all()  # All products in the wishlist
-   return render(request, 'wishlist.html', {'products': products_in_wishlist})
-
-def wish(request):
-    user = User.objects.get(email=request.session['email'])
-    wishlist = Wishlist.objects.filter(user=user).first()
-    products = wishlist.product.all()
-    return render(request, 'wishlist.html', {'products': products})
-
 def details(request,pk):
     product = Product.objects.get(pk=pk)
     return render(request, 'product-single.html', {'product': product})
+
+def addwish(request,pk):
+    user = User.objects.get(email=request.session['email'])
+    product = Product.objects.get(pk=pk)
+    
+    Wishlist.objects.create(
+        user = user,
+        product = product
+        
+    )
+    return redirect ('wishlist')
+
+def wishlist(request):
+    user = User.objects.get(email=request.session['email'])
+
+    
+    wishlist = Wishlist.objects.filter(user=user)
+    
+    return render(request,'wishlist.html',{'wishlist':wishlist})
+
+def dwishlist(request,pk):
+    user = User.objects.get(email=request.session['email'])
+    
+    wishlist = Wishlist.objects.get(pk=pk)
+    
+    wishlist.delete()
+    
+    return redirect('wishlist')
+
+def add_to_cart(request,pk):
+    user = User.objects.get(email=request.session['email'])
+    product = Product.objects.get(pk=pk)
+    
+    cart = Cart.objects.create(
+        
+        user=user,
+        product=product
+    )
+    return redirect('shop')
+
+def cart(request):
+    try:
+        user = User.objects.get(email=request.session['email'])  # Get the user based on the session
+        cart_items = Cart.objects.filter(user=user)  # Get all cart items for this user
+        
+        # Calculate total price
+        total_price = sum(item.product.price for item in cart_items)  # Assuming the product has a 'price' attribute
+        
+    except User.DoesNotExist:
+        cart_items = []  # If no user is found, cart is empty
+        total_price = 0  # Set total price to 0
+    
+    # Return cart items and total price to the template
+    return render(request, 'cart.html', {'cart': cart_items, 'total_price': total_price})
+
+def del_cart(request,pk):
+    user = User.objects.get(email=request.session['email'])
+    cart = Cart.objects.get(pk=pk)
+    cart.delete()
+    return redirect('cart')

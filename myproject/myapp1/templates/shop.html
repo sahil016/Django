@@ -3,29 +3,18 @@
 
 {% block content %}
 
-
+<head>
+	<style>
+		.img-prod img {
+			width: 300px;  /* Set your desired width */
+			height: 200px; /* Set your desired height */
+			object-fit: cover; /* Ensures the image covers the area without distortion */
+		}
+	</style>
+</head>
   <body class="goto-here">
-		<div class="py-1 bg-black">
-    	<div class="container">
-    		<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-	    		<div class="col-lg-12 d-block">
-		    		<div class="row d-flex">
-		    			<div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-						    <span class="text">+ 1235 2355 98</span>
-					    </div>
-					    <div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-						    <span class="text">youremail@email.com</span>
-					    </div>
-					    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-						    <span class="text">3-5 Business days delivery &amp; Free Returns</span>
-					    </div>
-				    </div>
-			    </div>
-		    </div>
-		  </div>
-    </div>
+
+
     
 
     <div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
@@ -50,7 +39,7 @@
 		    			{% for product in products %}
 		    			<div class="col-sm-6 col-md-6 col-lg-4 ftco-animate">
 		    				<div class="product">
-		    					<a href="#" class="img-prod"><img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}">
+		    					<a href="#" class="img-prod"><img class="img-fluid" src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 300px; height: 350px; object-fit: cover;">
 		    						<div class="overlay"></div>
 		    					</a>
 		    					<div class="text py-3 px-3">
@@ -73,7 +62,7 @@
 		    							<a href="#" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
 		    							<a href="{% url 'details' pk=product.pk %}" class="add-to-cart text-center py-2 mr-1"><span>more details<i class="ion-ios-add ml-1"></i></span></a>
 
-		    							<a href="{% url 'wishlist' pk=product.pk %}" class="buy-now text-center py-2" style="display: inline-flex; justify-content: center; align-items: center; width: 32px; height: 32px; border-radius: 50%; padding: 6px; background-color: #f0f0f0;">
+		    							<a href="{% url 'addwish' pk=product.pk %}" class="buy-now text-center py-2" style="display: inline-flex; justify-content: center; align-items: center; width: 32px; height: 32px; border-radius: 50%; padding: 6px; background-color: #f0f0f0;">
 											<span>
 											  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
 												<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
