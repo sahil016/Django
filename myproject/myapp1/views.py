@@ -113,7 +113,8 @@ def login(request):
                 msg = "Invalid Password!!"
                 return render(request,'login.html',{'msg':msg})
             
-        except:
+        except Exception as e:
+            print("******",e)
             msg = "Invalid Email!!"
             return render(request,'login.html',{'msg':msg})
     else:
@@ -377,7 +378,7 @@ def cart(request):
         cart_items = []  # If no user is found, cart is empty
         total_price = 0  # Set total price to 0
     
-    # Return cart items and total price to the template
+    
     return render(request, 'cart.html', {'cart': cart_items, 'total_price': total_price})
 
 def del_cart(request,pk):
