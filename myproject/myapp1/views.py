@@ -113,9 +113,9 @@ def login(request):
                 msg = "Invalid Password!!"
                 return render(request,'login.html',{'msg':msg})
             
-        except:
+        except Exception as e:
             msg = "Invalid Email!!"
-            return render(request,'login.html',{'msg':msg})
+            return render(request,'login.html',{'e':e})
     else:
         
 
@@ -125,7 +125,6 @@ def login(request):
 def logout(request):
     # del request.session['email']
     # del request.session['profile']
-    request.session.flush()  # Clears all session data
     request.session.flush()  # Clears all session data
     return redirect('login')
 
@@ -238,7 +237,7 @@ def cprofile(request):
             else:
                 return redirect('sindex')
         except Exception as e:
-            print(f"Error during profile update: {e}")
+            print("*******************",e)
         user.save()
         return redirect('index')
         
@@ -385,3 +384,7 @@ def del_cart(request,pk):
     cart = Cart.objects.get(pk=pk)
     cart.delete()
     return redirect('cart')
+
+
+
+""" secretky: HhVIZzKIdgL5X5YzfDk9fleR """

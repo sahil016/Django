@@ -75,6 +75,7 @@ TEMPLATES = [
                 'myapp1.context_processors.cart_count',  # Replace 'myapp1' with your actual app name
 
                 'django.template.context_processors.debug',
+                'django.template.context_processors.request',   
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 
