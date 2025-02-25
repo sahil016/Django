@@ -116,6 +116,10 @@ def login(request):
                 return render(request,'login.html',{'msg':msg})
             
         except Exception as e:
+<<<<<<< HEAD
+            print("******",e)
+=======
+>>>>>>> 8209b52c637f177ffc66f17c29f77c8ca7641448
             msg = "Invalid Email!!"
             return render(request,'login.html',{'e':e})
     else:
@@ -395,6 +399,7 @@ def cart(request):
         }
 
     except User.DoesNotExist:
+<<<<<<< HEAD
         cart_items = []
         total_price = 0
         context = {
@@ -406,6 +411,13 @@ def cart(request):
     # Pass context to template
     return render(request, 'cart.html', context)
 
+=======
+        cart_items = []  # If no user is found, cart is empty
+        total_price = 0  # Set total price to 0
+    
+    
+    return render(request, 'cart.html', {'cart': cart_items, 'total_price': total_price})
+>>>>>>> 6cc38be796e560afceb3d83db2ef9c05c8e1a12c
 
 def del_cart(request,pk):
     user = User.objects.get(email=request.session['email'])
