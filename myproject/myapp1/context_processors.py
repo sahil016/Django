@@ -8,7 +8,7 @@ def cart_count(request):
         # Get the user from the session using email
         user = User.objects.get(email=request.session.get('email'))
         # Count the items in the user's cart
-        count = Cart.objects.filter(user=user).count()
+        count = Cart.objects.filter(user=user,payment=False).count()
     except User.DoesNotExist:
         pass  # If the user doesn't exist, just leave count as 0
 

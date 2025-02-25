@@ -3,7 +3,9 @@ from .models import *
 from django.contrib import messages
 import random
 import requests
-
+import razorpay
+from django.conf import settings
+from django.http import JsonResponse,HttpResponse
 from django.shortcuts import render, redirect
 from .models import User
 
@@ -360,24 +362,50 @@ def add_to_cart(request,pk):
     cart = Cart.objects.create(
         
         user=user,
-        product=product
+        product=product,
+        price=product.price,
+        qty= 1,
+        # total = product.price
+
     )
     return redirect('shop')
 
 def cart(request):
     try:
         user = User.objects.get(email=request.session['email'])  # Get the user based on the session
-        cart_items = Cart.objects.filter(user=user)  # Get all cart items for this user
-        
+        cart_items = Cart.objects.filter(user=user,payment=False)  # Get all cart items for this user
+
         # Calculate total price
-        total_price = sum(item.product.price for item in cart_items)  # Assuming the product has a 'price' attribute
+        total_price = 0
+        for i in cart_items:
+            total_price += i.product.price * i.qty
         
+        payment=None
+        
+        if total_price > 0:
+        # Razorpay payment processing
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            payment = client.order.create({'amount': total_price * 100, 'currency': 'INR', 'payment_capture': 1})
+
+        # Create the context dictionary
+        context = {
+            'cart': cart_items,
+            'total_price': total_price,
+            'payment': payment  # Ensure payment is passed to the template
+        }
+
     except User.DoesNotExist:
-        cart_items = []  # If no user is found, cart is empty
-        total_price = 0  # Set total price to 0
-    
-    # Return cart items and total price to the template
-    return render(request, 'cart.html', {'cart': cart_items, 'total_price': total_price})
+        cart_items = []
+        total_price = 0
+        context = {
+            'cart': cart_items,
+            'total_price': 0,
+            'payment':None
+        }
+
+    # Pass context to template
+    return render(request, 'cart.html', context)
+
 
 def del_cart(request,pk):
     user = User.objects.get(email=request.session['email'])
@@ -386,5 +414,16 @@ def del_cart(request,pk):
     return redirect('cart')
 
 
-
-""" secretky: HhVIZzKIdgL5X5YzfDk9fleR """
+def sucess(request):
+    try:
+        user = User.objects.get(email=request.session['email'])
+        cart_items = Cart.objects.filter(user=user,payment=False)
+        for i in cart_items:
+            print("******************")
+            i.payment=True
+            i.save()
+            
+        return render(request,'secess.html',{'cart_items':cart_items})
+    except Exception as e:
+        print(e)
+    return render(request,'sucess.html')

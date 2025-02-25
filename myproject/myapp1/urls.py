@@ -46,6 +46,7 @@ urlpatterns = [
     path('detail/<int:pk>' ,views.details, name='details'),
     path('dwishlist/<int:pk>',views.dwishlist,name='dwishlist' ),
     path('cart',views.cart,name='cart'),
+    path('sucess',views.sucess,name='sucess'),
 
     path('del_cart/<int:pk>/', views.del_cart, name='del_cart'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
